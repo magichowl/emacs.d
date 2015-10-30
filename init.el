@@ -48,6 +48,8 @@
 (require-package 'diminish)
 (require-package 'scratch)
 (require-package 'mwe-log-commands)
+(require-package 'pdf-tools)
+(pdf-tools-install)
 
 (require 'init-frame-hooks)
 (require 'init-xterm)
