@@ -101,7 +101,6 @@
 (require 'init-rails)
 (require 'init-sql)
 
-(require 'init-paredit)
 (require 'init-lisp)
 (require 'init-slime)
 (unless (version<= emacs-version "24.2")
