@@ -153,9 +153,6 @@
 ;; Enable desired features for all lisp modes
 ;; ----------------------------------------------------------------------------
 (require-package 'rainbow-delimiters)
-(require-package 'redshank)
-(after-load 'redshank
-  (diminish 'redshank-mode))
 
 (maybe-require-package 'aggressive-indent)
 
@@ -165,7 +162,6 @@
   (when (fboundp 'aggressive-indent-mode)
     (aggressive-indent-mode))
   (turn-on-eldoc-mode)
-  (redshank-mode)
   (add-hook 'after-save-hook #'check-parens nil t))
 
 (defun sanityinc/emacs-lisp-setup ()
