@@ -13,6 +13,8 @@
 
 (defconst *spell-check-support-enabled* nil) ;; Enable with t if you prefer
 (defconst *is-a-mac* (eq system-type 'darwin))
+(defconst *linux* (or (eq system-type 'gnu/linux) (eq system-type 'linux)))
+(defconst *windows* (or (eq system-type 'cygwin) (eq system-type 'windows-nt)))
 
 ;;----------------------------------------------------------------------------
 ;; Temporarily reduce garbage collection during startup
@@ -109,7 +111,7 @@
 (require 'init-common-lisp)
 
 (require 'init-bbdb)
-;; (require 'gnus-mu4e)
+(require 'gnus-mu4e)
 ;; (require 'init-ergoemacs)
 (when *spell-check-support-enabled*
   (require 'init-spelling))
