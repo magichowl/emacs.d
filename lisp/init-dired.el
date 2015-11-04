@@ -25,14 +25,31 @@ The app is chosen from your OS's preference."
 
     (when doIt
       (cond
-       ((string-equal system-type "windows-nt")
+       (*windows*
         (mapc (lambda (fPath) (w32-shell-execute "open" (replace-regexp-in-string "/" "\\" fPath t t)) ) myFileList))
-       ((string-equal system-type "darwin")
+       (*is-a-mac*
         (mapc (lambda (fPath) (shell-command (format "open \"%s\"" fPath)) )  myFileList) )
-       ((string-equal system-type "gnu/linux")
+       (*linux*
         (mapc (lambda (fPath) (let ((process-connection-type nil)) (start-process "" nil "xdg-open" fPath)) ) myFileList) ) ) ) ) )
 
 (global-set-key (kbd "C-S-o") 'xah-open-in-external-app)
+
+(defun xah-open-in-desktop ()
+  "Show current file in desktop (OS's file manager).
+URL `http://ergoemacs.org/emacs/emacs_dired_open_file_in_ext_apps.html'
+Version 2015-06-12"
+  (interactive)
+  (cond
+   (*windows*
+    (w32-shell-execute "explore" (replace-regexp-in-string "/" "\\" default-directory t t)))
+   (*is-a-mac*
+    (shell-command "open ."))
+   (*linux*
+    (let ((process-connection-type nil)) (start-process "" nil "xdg-open" "."))
+    ;; (shell-command "xdg-open .") ;; 2013-02-10 this sometimes froze emacs till the folder is closed. ⁖ with nautilus
+    )))
+
+(global-set-key (kbd "C-S-d") 'xah-open-in-desktop)
 
 (after-load 'dired
   (require 'dired+)
