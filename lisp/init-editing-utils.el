@@ -27,6 +27,8 @@
  truncate-lines nil
  truncate-partial-width-windows nil)
 
+(global-set-key (kbd "C-\"") 'bookmark-jump)
+
 (global-auto-revert-mode)
 (setq global-auto-revert-non-file-buffers t
       auto-revert-verbose nil)
@@ -62,7 +64,8 @@
 (require-package 'undo-tree)
 (global-undo-tree-mode)
 (diminish 'undo-tree-mode)
-
+(global-set-key (kbd "C-z") 'undo-tree-undo)
+(global-set-key (kbd "C-S-z") 'undo-tree-redo)
 
 (require-package 'highlight-symbol)
 (dolist (hook '(prog-mode-hook html-mode-hook css-mode-hook))
@@ -171,7 +174,9 @@
     (kill-region (point) prev-pos)))
 
 (global-set-key (kbd "C-M-<backspace>") 'kill-back-to-indentation)
-
+(global-set-key [f2] 'whole-line-or-region-kill-region)
+(global-set-key [f3] 'whole-line-or-region-kill-ring-save)
+(global-set-key [f4] 'whole-line-or-region-yank)
 
 ;;----------------------------------------------------------------------------
 ;; Page break lines
