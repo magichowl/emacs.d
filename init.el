@@ -92,6 +92,7 @@
 (require 'init-javascript)
 (require 'init-php)
 (require 'init-org)
+(require 'init-latex)
 (require 'init-nxml)
 (require 'init-html)
 (require 'init-css)
