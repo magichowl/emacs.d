@@ -64,6 +64,7 @@
 (require 'init-uniquify)
 (require 'init-ibuffer)
 (require 'init-flycheck)
+(require 'init-growl)
 
 (require 'init-recentf)
 (require 'init-ido)
