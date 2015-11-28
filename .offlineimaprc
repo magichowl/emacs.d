@@ -1,0 +1,142 @@
+# Sample minimal config file.  Copy this to ~/.offlineimaprc and edit to
+# suit to get started fast.
+
+## For a complete offlineimaprc example, see: https://github.com/OfflineIMAP/offlineimap/blob/master/offlineimap.conf
+
+[general]
+## Possible options: Quiet Basic TTYUI Blinkenlights
+## NB: only TTYUI and Blinkenlights are capable of prompting for the password
+ui = TTYUI
+# ui = Noninteractive.Quiet
+maxsyncaccounts = 2
+accounts = aliyun, 163
+pythonfile = ~/.emacs.d/.offlineimap.py
+ssl = yes
+
+[Account qq]
+localrepository = qq-local
+remoterepository = qq-remote
+# maxsize = 2000000
+maxage = 5
+#autorefresh = 30
+
+[Account gmail]
+localrepository = gmail-local
+remoterepository = gmail-remote
+# maxsize = 2000000
+maxage = 5
+#autorefresh = 30
+
+[Account 163]
+localrepository = 163-local
+remoterepository = 163-remote
+# maxsize = 2000000
+maxage = 5
+#autorefresh = 30
+
+[Account aliyun]
+localrepository = aliyun-local
+remoterepository = aliyun-remote
+# maxsize = 2000000
+maxage = 5
+#autorefresh = 30
+
+[Account hot]
+localrepository = hot-local
+remoterepository = hot-remote
+# maxsize = 2000000
+maxage = 5
+#autorefresh = 30
+
+[Repository qq-local]
+type = Maildir
+localfolders = ~/Maildir/qq
+## This will locally replicate the IMAP folder structure, instead of the default separator '.' that flattens it.
+sep = /
+
+[Repository gmail-local]
+type = Maildir
+localfolders = ~/Maildir/gmail
+## This will locally replicate the IMAP folder structure, instead of the default separator '.' that flattens it.
+sep = /
+
+[Repository 163-local]
+type = Maildir
+localfolders = ~/Maildir/163
+## This will locally replicate the IMAP folder structure, instead of the default separator '.' that flattens it.
+sep = /
+
+[Repository aliyun-local]
+type = Maildir
+localfolders = ~/Maildir/aliyun
+## This will locally replicate the IMAP folder structure, instead of the default separator '.' that flattens it.
+sep = /
+
+[Repository hot-local]
+type = Maildir
+localfolders = ~/Maildir/hot
+## This will locally replicate the IMAP folder structure, instead of the default separator '.' that flattens it.
+sep = /
+
+[Repository qq-remote]
+type = IMAP
+remotehost = imap.qq.com
+remoteuser = 190083652
+# remotepass = ******
+remotepasseval = get_password_emacs("imap.qq.com", "190083652", "993")
+## One-way synching.  Perfepct for backups.
+#readonly = True
+# ssl = yes
+sslcacertfile = /etc/ssl/certs/ca-certificates.crt
+
+[Repository gmail-remote]
+type = Gmail
+# type = IMAP
+# remotehost = imap.gmail.com
+remoteuser = pansenshan@gmail.com
+# remotepass = ******
+remotepasseval = get_password_emacs("imap.gmail.com", "pansenshan@gmail.com", "993")
+## One-way synching.  Perfepct for backups.
+#readonly = True
+# ssl = yes
+sslcacertfile = /etc/ssl/certs/ca-certificates.crt
+
+## Sync only 'All Mail': we lose the folder/labels structure, but this is the only way to not duplicate emails.
+folderfilter = lambda foldername: foldername in ['[Gmail]/Drafts', '[Gmail]/Trash', '[Gmail]/Spam', '[Gmail]/Sent', 'INBOX']
+
+[Repository 163-remote]
+type = IMAP
+remotehost = imap.163.com
+remoteuser = ss_pan@163.com
+remotepasseval = get_password_emacs("imap.163.com", "ss_pan@163.com", "993")
+## One-way synching.  Perfect for backups.
+#readonly = True
+
+sslcacertfile = /etc/ssl/certs/ca-certificates.crt
+folderfilter = lambda foldername: foldername in ['&XfJT0ZAB-', 'INBOX']
+
+[Repository aliyun-remote]
+type = IMAP
+remotehost = imap.aliyun.com
+remoteuser = ss.pan@aliyun.com
+# remotepass = ******
+remotepasseval = get_password_emacs("imap.aliyun.com", "ss.pan@aliyun.com", "993")
+## One-way synching.  Perfepct for backups.
+#readonly = True
+# ssl = yes
+sslcacertfile = /etc/ssl/certs/ca-certificates.crt
+
+
+[Repository hot-remote]
+type = IMAP
+remotehost = imap-mail.outlook.com
+remoteuser = pansenshan@hotmail.com
+# remotepass = ******
+remotepasseval = get_password_emacs("imap-mail.outlook.com", "pansenshan@hotmail.com", "993")
+## One-way synching.  Perfect for backups.
+#readonly = True
+sslcacertfile = /etc/ssl/certs/ca-certificates.crt
+
+# ssl = yes
+# &V4NXPpCuTvY- corresponds Spam, @todo: change name using config of offlineimap
+# folderfilter = lambda foldername: foldername in ['&V4NXPpCuTvY-', 'Sent', 'INBOX']

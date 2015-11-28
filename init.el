@@ -64,6 +64,7 @@
 (require 'init-uniquify)
 (require 'init-ibuffer)
 (require 'init-flycheck)
+(require 'init-growl)
 
 (require 'init-recentf)
 (require 'init-ido)
@@ -74,6 +75,7 @@
 (require 'init-fonts)
 (require 'init-mmm)
 
+(require 'init-smartparens)
 (require 'init-editing-utils)
 (require 'init-whitespace)
 (require 'init-fci)
@@ -92,6 +94,7 @@
 (require 'init-javascript)
 (require 'init-php)
 (require 'init-org)
+(require 'init-latex)
 (require 'init-nxml)
 (require 'init-html)
 (require 'init-css)

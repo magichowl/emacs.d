@@ -56,5 +56,11 @@
 (setq ibuffer-filter-group-name-face 'font-lock-doc-face)
 
 (global-set-key (kbd "C-x C-b") 'ibuffer)
+(global-set-key (kbd "C-\'") 'ido-switch-buffer)
+(global-set-key (kbd "<C-next>") 'next-buffer)
+(global-set-key (kbd "<C-prior>") 'previous-buffer)
+(global-set-key (kbd "C-w") 'kill-this-buffer)
+(global-set-key (kbd "C-s") 'save-buffer)
+(global-set-key (kbd "M-s") 'isearch-forward)
 
 (provide 'init-ibuffer)
