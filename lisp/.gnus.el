@@ -108,7 +108,8 @@
 (setq smtpmail-default-smtp-server "smtp.aliyun.com"
       smtpmail-smtp-user user-mail-address
       smtpmail-smtp-server "smtp.aliyun.com"
-      smtpmail-smtp-service 465)
+      smtpmail-smtp-service 465
+      smtpmail-stream-type 'ssl)
 
 (defvar tv-smtp-accounts
   '(("ss.pan@aliyun.com"
