@@ -108,17 +108,17 @@
 (setq smtpmail-default-smtp-server "smtp.aliyun.com"
       smtpmail-smtp-user user-mail-address
       smtpmail-smtp-server "smtp.aliyun.com"
-      smtpmail-smtp-service 25)
+      smtpmail-smtp-service 465)
 
 (defvar tv-smtp-accounts
   '(("ss.pan@aliyun.com"
      (:server "smtp.aliyun.com"
-      :port 25
-      :name "Pan, Senshan (潘森杉)"))
+              :port 465
+              :name "Pan, Senshan (潘森杉)"))
     ("ss_pan@163.com"
      (:server "smtp.163.com"
-      :port 25
-      :name "潘森杉"))))
+              :port 465
+              :name "潘森杉"))))
 
 (defun tv-change-smtp-server ()
   "Use account found in `tv-smtp-accounts' according to from header.
