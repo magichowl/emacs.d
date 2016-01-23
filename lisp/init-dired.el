@@ -50,6 +50,15 @@ Version 2015-06-12"
     )))
 
 (global-set-key (kbd "C-S-d") 'xah-open-in-desktop)
+
+;; add packing and unpacking for dired
+(load-file "~/.emacs.d/package/dired-pack/dired-pack.el")
+(require 'dired-pack)
+
+;; run asynchronously for copying, renaming and symlinking
+(require-package 'async)
+(when (require 'dired-aux)
+  (require 'dired-async))
 
 (after-load 'dired
   (require 'dired+)
