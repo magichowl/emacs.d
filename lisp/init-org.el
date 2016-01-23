@@ -9,6 +9,53 @@
 (define-key global-map (kbd "C-c l") 'org-store-link)
 (define-key global-map (kbd "C-c a") 'org-agenda)
 
+(require 'ox-beamer)
+(defun my-beamer-bold (contents backend info)
+  (when (eq backend 'beamer)
+    (replace-regexp-in-string "\\`\\\\[A-Za-z0-9]+" "\\\\textbf" contents)))
+(add-to-list 'org-export-filter-bold-functions 'my-beamer-bold)
+
+(defun my-beamer-warning (contents backend info)
+  (when (eq backend 'beamer)
+    (replace-regexp-in-string "\\`\\\\[A-Za-z0-9]+" "\\\\alert" contents)))
+
+(add-to-list 'org-export-filter-verbatim-functions 'my-beamer-warning)
+
+;; to enable ~'xxx~ *"xx* =,xx= to be treated as emphasised expressions
+(setcar (nthcdr 2 org-emphasis-regexp-components) " \t\n")
+(custom-set-variables `(org-emphasis-alist ',org-emphasis-alist))
+
+;; export snippet translations
+(add-to-list 'org-export-snippet-translation-alist
+             '("b" . "beamer"))
+
+;; auto enable preview for math equations
+(setq org-startup-with-latex-preview 'nil)
+;; auto enable image preview
+;; (setq org-startup-with-inline-images t)
+
+(setq org-latex-default-packages-alist
+      '(("log-declarations=false" "xparse" t) ;; warnings are erased
+        ("AUTO" "inputenc" t)
+        ("T1" "fontenc" t)
+        ;; ("quiet" "fontspec" t) ;; see http://tex.stackexchange.com/questions/46683/xelatex-warning-redefining-document-command-oldstylenums-with-arg-spec-m
+        ("" "fixltx2e" nil)
+        ("" "float" nil)
+        ("" "wrapfig" nil)
+        ("" "rotating" nil)
+        ("normalem" "ulem" t)
+        ("" "graphicx" t)
+        ("" "amsmath" t)
+        ("" "amssymb" t)
+        ;; ("colorlinks,linkcolor=blue,anchorcolor=blue,citecolor=blue" "hyperref" nil)
+        ("" "hyperref" nil)
+        "\\tolerance=1000"))
+;; (require 'ox-bibtex)
+;; export org-mode in Chinese into PDF
+;; package xeCJK should be in org file
+(setq org-latex-pdf-process '("latexmk -xelatex -f %f"))
+;; (setq org-latex-pdf-process '("autolatex --xelatex --synctex --pdf -f=%f"))
+
 ;; Various preferences
 (setq org-log-done t
       org-completion-use-ido t
