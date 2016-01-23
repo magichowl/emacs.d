@@ -59,8 +59,8 @@ Version 2015-06-12"
   (setq dired-recursive-deletes 'top)
   (define-key dired-mode-map [mouse-2] 'dired-find-file)
   ;; no corresponding functions
-  ;; (define-key dired-mode-map "|" 'dired-sort-menu-toggle-reverse)
-  ;; (define-key dired-mode-map (kbd "A") 'gnus-dired-attach)
+  (if *linux*
+      (define-key dired-mode-map (kbd "A") 'gnus-dired-attach))
   (define-key dired-mode-map (kbd "<M-up>") (kbd "^"))
   (define-key dired-mode-map (kbd "F") 'find-name-dired)
   (define-key dired-mode-map (kbd "D") '(lambda () (interactive) (setq delete-by-moving-to-trash (not delete-by-moving-to-trash))))
