@@ -115,7 +115,7 @@
 
 (require 'init-bbdb)
 (require 'gnus-mu4e)
-;; (require 'init-ergoemacs)
+(require 'init-ergoemacs)
 (when *spell-check-support-enabled*
   (require 'init-spelling))
 
