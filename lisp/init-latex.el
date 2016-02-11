@@ -1,11 +1,13 @@
 (require-package 'auctex)
 (require-package 'cdlatex)
+(require-package 'auctex-latexmk)
+(auctex-latexmk-setup)
 ;; 93 is the decimal of "]", 46 ".", 98 "b"
 (setq cdlatex-math-symbol-alist (quote ((93 ("\\Rightarrow" "\\Longrightarrow" "\\rightsquigarrow"))
-(46 ("\\cdot" "\\ldot"))
-(98 ("\\beta" "\\bm" "\\mathbb"))
-(99 ("\\mathcal"))
-)))
+                                        (46 ("\\cdot" "\\ldot"))
+                                        (98 ("\\beta" "\\bm" "\\mathbb"))
+                                        (99 ("\\mathcal"))
+                                        )))
 
 ;; electric pairing of cdlatex can't recognize selected region
 (eval-after-load 'cdlatex
