@@ -452,5 +452,45 @@ typical word processor."
      (sql . nil)
      (sqlite . t))))
 
+;; adds support for only environment and associates to the letter O
+(add-to-list 'org-beamer-environments-extra
+             '("onlyenv" "O" "\\begin{onlyenv}%a" "\\end{onlyenv}"))
+
+;; Conditionally eval org-babel code without confirm for security reason
+;; see http://orgmode.org/manual/Code-evaluation-security.html#Code-evaluation-security
+(defun my-org-confirm-babel-evaluate (lang body)
+  (not (member lang '("latex" "ditaa" "dot" "R"))))  ; don't ask for ditaa
+(setq org-confirm-babel-evaluate 'my-org-confirm-babel-evaluate)
+
+                                        ; Make babel results blocks lowercase
+(setq org-babel-results-keyword "results")
+
+(defun bh/display-inline-images ()
+  (condition-case nil
+      (org-display-inline-images)
+    (error nil)))
+(add-hook 'org-babel-after-execute-hook 'bh/display-inline-images 'append)
+
+(defun org-mode-article-modes ()
+  (reftex-mode t)
+  (and (buffer-file-name)
+       (file-exists-p (buffer-file-name))
+       (reftex-parse-all)))
+
+(mapc (lambda (mode)
+        (add-hook 'org-mode-hook mode))
+      (list 'turn-on-org-cdlatex
+            '(lambda () (local-set-key (kbd "s-e") 'org-emphasize)
+               (local-set-key (kbd "C-c [") 'org-reftex-citation)
+               (local-set-key (kbd "C-c e") 'LaTeX-environment)
+               )
+            )
+      )
+
+(add-hook 'org-mode-hook
+          (lambda ()
+            (if (member "REFTEX" org-todo-keywords-1)
+                (org-mode-article-modes)))
+          )
 
 (provide 'init-org)
