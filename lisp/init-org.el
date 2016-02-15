@@ -355,6 +355,62 @@ typical word processor."
 ;;         '(("I" "Import diary from iCal" agenda ""
 ;;            ((org-agenda-mode-hook #'org-mac-iCal)))))
 
+(require-package 'cal-china-x)
+(require 'cal-china-x)
+(setq mark-holidays-in-calendar t)
+(setq cal-china-x-important-holidays cal-china-x-chinese-holidays)
+(setq holiday-pss-holidays
+      (append cal-china-x-chinese-holidays
+              '(;;公历节日
+                ;;(holiday-float 6 0 3 "父亲节")
+                (holiday-fixed 10 2 "结婚纪念日")
+                (holiday-fixed 8 14 "瑶桐生日")
+                ;; 农历节日
+                (holiday-lunar 1 1 "春节" 0)
+                (holiday-lunar 7 7 "结婚纪念日" "七夕")
+                (holiday-lunar 11 6 "妈生日" 0)
+                (holiday-lunar 11 14 "李莎生日" 0)
+                (holiday-lunar 12 16 "爸生日" 0)
+                )
+              )
+      )
+(setq calendar-holidays holiday-pss-holidays)
+
+(add-hook 'org-finalize-agenda-hook
+          (lambda ()
+            (save-excursion
+              (color-org-header "Personal:"  "green")
+              (color-org-header "Birthdays:" "gold")
+              (color-org-header "Work:"      "orange")
+              (color-org-header "Weather:"      "gray")
+              (color-org-header "Off-site:"  "SkyBlue4"))))
+(defun color-org-header (tag col)
+  ""
+  (interactive)
+  (goto-char (point-min))
+  (while (re-search-forward tag nil t)
+    (add-text-properties (match-beginning 0) (point-at-eol)
+                         `(face (:foreground ,col)))))
+
+;; (setq appt-display-mode-line 'nil
+;;       appt-message-warning-time 15 ;; warn 15 min in advance
+;;       appt-display-format 'windows
+;;       ;; todochiku-display-appts-in-window-too 'nil
+;;       )
+
+(org-agenda-to-appt)
+;; When use 'r' (rebuild agenda) reload appt
+(add-hook 'org-agenda-mode-hook
+          (lambda ()
+            (setq appt-time-msg-list nil)
+            (org-agenda-to-appt)))
+
+(appt-activate t)             ;; active appt (appointment notification)
+(display-time)
+
+;; update appt each time agenda opened
+(add-hook 'org-finalize-agenda-hook 'org-agenda-to-appt)
+
 ;;   (add-hook 'org-agenda-cleanup-fancy-diary-hook
 ;;             (lambda ()
 ;;               (goto-char (point-min))
