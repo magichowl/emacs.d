@@ -57,8 +57,6 @@
 
 (global-set-key (kbd "C-x C-b") 'ibuffer)
 (global-set-key (kbd "C-\'") 'ido-switch-buffer)
-(global-set-key (kbd "<C-next>") 'next-buffer)
-(global-set-key (kbd "<C-prior>") 'previous-buffer)
 (global-set-key (kbd "C-w") 'kill-this-buffer)
 
 (provide 'init-ibuffer)

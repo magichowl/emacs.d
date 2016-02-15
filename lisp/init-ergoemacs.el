@@ -9,8 +9,6 @@
   (define-key key-translation-map (kbd "<apps>") (kbd "<menu>")))
 (ergoemacs-theme-component pan ()
   "My personal modifications to ergoemacs-mode keys."
-  (global-set-key (kbd "<C-next>") 'next-buffer)
-  (global-set-key (kbd "<C-prior>") 'previous-buffer)
   (global-set-key (kbd "M-t") 'ispell-word)
   (global-set-key "\M-c" 'toggle-current-char-case)
   (global-set-key "\C-e" 'eshell)
@@ -23,10 +21,9 @@
   )
 (ergoemacs-require 'pan)
 ;; customize keys start with <menu>
-(global-set-key (kbd "C-\'") 'ido-switch-buffer)
 (global-set-key (kbd "<menu>") nil)
-(global-set-key (kbd "<menu> <C-prior>") 'previous-buffer)
-(global-set-key (kbd "<menu> <C-next>") 'next-buffer)
+(global-set-key (kbd "<menu> <left>") 'previous-buffer)
+(global-set-key (kbd "<menu> <right>") 'next-buffer)
 (global-set-key (kbd "<menu> a") 'scratch)
 (global-set-key (kbd "<menu> c") 'calendar)
 (global-set-key (kbd "<menu> d") 'delete-rectangle)
