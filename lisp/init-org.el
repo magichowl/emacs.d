@@ -52,8 +52,8 @@
 ;; (require 'ox-bibtex)
 ;; export org-mode in Chinese into PDF
 ;; package xeCJK should be in org file
-(setq org-latex-pdf-process '("latexmk -xelatex -f %f"))
-;; (setq org-latex-pdf-process '("autolatex --xelatex --synctex --pdf -f=%f"))
+;; (setq org-latex-pdf-process '("latexmk -xelatex -f %f"))
+(setq org-latex-pdf-process '("autolatex"))
 
 ;; Various preferences
 (setq org-log-done t
