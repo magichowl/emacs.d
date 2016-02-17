@@ -427,7 +427,7 @@ typical word processor."
 
 
 (after-load 'org
-  (define-key org-mode-map (kbd "C-M-<up>") 'org-up-element)
+  (define-key org-mode-map (kbd "C-c C-<up>") 'org-up-element)
   (when *is-a-mac*
     (define-key org-mode-map (kbd "M-h") nil)
     (define-key org-mode-map (kbd "C-c g") 'org-mac-grab-link)))
