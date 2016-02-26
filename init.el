@@ -52,6 +52,8 @@
 (require-package 'mwe-log-commands)
 (require-package 'pdf-tools)
 (pdf-tools-install)
+(require-package 'tabbar)
+(tabbar-mode t)
 
 (require 'init-frame-hooks)
 (require 'init-xterm)
