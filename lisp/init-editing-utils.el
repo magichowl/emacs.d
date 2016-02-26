@@ -33,7 +33,6 @@
 
 (transient-mark-mode t)
 
-
 
 ;;; Newline behaviour
 
@@ -109,20 +108,45 @@
 (show-paren-mode 1)
 
 ;;----------------------------------------------------------------------------
-;; Expand region
-;;----------------------------------------------------------------------------
-(require-package 'expand-region)
-(global-set-key (kbd "C-=") 'er/expand-region)
-
-
-;;----------------------------------------------------------------------------
 ;; Don't disable case-change functions
 ;;----------------------------------------------------------------------------
 (put 'upcase-region 'disabled nil)
 (put 'downcase-region 'disabled nil)
 
+
+;; toggle case of single char
+(defun upcase-char (pos)
+  (when (> pos (point-min))
+    (save-excursion
+      (upcase-region pos (1+ pos)))
+    ))
 
-;;----------------------------------------------------------------------------
+(defun downcase-char (pos)
+  (when (> pos (point-min))
+    (save-excursion
+      (downcase-region pos (1+ pos)))
+    ))
+
+(defun toggle-current-char-case ()
+  (interactive)
+  (let ((current-position (point)))
+    (when (> current-position (point-min))
+      (when (not (eq last-command this-command))
+        (save-excursion
+          (goto-char current-position)
+          (cond
+           ((looking-at "[[:upper:]]") (put this-command 'state "u"))
+           ((looking-at "[[:lower:]]")(put this-command 'state "l"))
+           (t (put this-command 'state "l") ))
+          ))
+      (cond
+       ((string= "l" (get this-command 'state))
+        (put this-command 'state "u") (downcase-char current-position))
+       ((string= "u" (get this-command 'state))
+        (put this-command 'state "l") (upcase-char current-position))
+       ))))
+
+
 ;; Rectangle selections, and overwrite text when the selection is active
 ;;----------------------------------------------------------------------------
 (cua-selection-mode t)                  ; for rectangles, CUA is nice
