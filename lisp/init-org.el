@@ -36,7 +36,6 @@
 
 (setq org-latex-default-packages-alist
       '(("log-declarations=false" "xparse" t) ;; warnings are erased
-        ("AUTO" "inputenc" t)
         ("T1" "fontenc" t)
         ;; ("quiet" "fontspec" t) ;; see http://tex.stackexchange.com/questions/46683/xelatex-warning-redefining-document-command-oldstylenums-with-arg-spec-m
         ("" "float" nil)
