@@ -322,5 +322,49 @@ With arg N, insert N newlines."
 (guide-key-mode 1)
 (diminish 'guide-key-mode)
 
+
+(defun replace-pairs-region (p1 p2 pairs)
+  "Replace multiple PAIRS of find/replace strings in region P1 P2.
+
+PAIRS should be a sequence of pairs [[findStr1 replaceStr1] [findStr2 replaceStr2] …] It can be list or vector, for the elements or the entire argument.  
+
+The find strings are not case sensitive. If you want case sensitive, set `case-fold-search' to nil. Like this: (let ((case-fold-search nil)) (replace-pairs-region …))
+
+The replacement are literal and case sensitive.
+
+Once a subsring in the input string is replaced, that part is not changed again.  For example, if the input string is “abcd”, and the pairs are a → c and c → d, then, result is “cbdd”, not “dbdd”. If you simply want repeated replacements, use `replace-pairs-in-string-recursive'.
+
+Same as `replace-pairs-in-string' except does on a region.
+
+Note: the region's text or any string in pairs is assumed to NOT contain any character from Unicode Private Use Area A. That is, U+F0000 to U+FFFFD. And, there are no more than 65534 pairs."
+  (let (
+        (unicodePriveUseA #xf0000)
+        ξi (tempMapPoints '()))
+    ;; generate a list of Unicode chars for intermediate replacement. These chars are in  Private Use Area.
+    (setq ξi 0)
+    (while (< ξi (length pairs))
+      (setq tempMapPoints (cons (char-to-string (+ unicodePriveUseA ξi)) tempMapPoints ))
+      (setq ξi (1+ ξi))
+      )
+    (save-excursion
+      (save-restriction
+        (narrow-to-region p1 p2)
+
+        ;; replace each find string by corresponding item in tempMapPoints
+        (setq ξi 0)
+        (while (< ξi (length pairs))
+          (goto-char (point-min))
+          (while (search-forward (elt (elt pairs ξi) 0) nil t)
+            (replace-match (elt tempMapPoints ξi) t t) )
+          (setq ξi (1+ ξi))
+          )
+
+        ;; replace each tempMapPoints by corresponding replacement string
+        (setq ξi 0)
+        (while (< ξi (length pairs))
+          (goto-char (point-min))
+          (while (search-forward (elt tempMapPoints ξi) nil t)
+            (replace-match (elt (elt pairs ξi) 1) t t) )
+          (setq ξi (1+ ξi)) ) ) ) ) )
 
 (provide 'init-editing-utils)
