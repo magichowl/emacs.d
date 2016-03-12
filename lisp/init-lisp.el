@@ -140,7 +140,6 @@
 
 (defvar sanityinc/lispy-modes-hook
   '(rainbow-delimiters-mode
-    enable-paredit-mode
     turn-on-eldoc-mode
     redshank-mode
     sanityinc/enable-check-parens-on-save)
