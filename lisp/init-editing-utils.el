@@ -1,7 +1,5 @@
 (require-package 'unfill)
 
-(when (fboundp 'electric-pair-mode)
-  (electric-pair-mode))
 (when (eval-when-compile (version< "24.4" emacs-version))
   (electric-indent-mode 1))
 
@@ -9,6 +7,8 @@
 ;; Some basic preferences
 ;;----------------------------------------------------------------------------
 (setq-default
+ minibuffer-prompt-properties (quote (read-only t point-entered minibuffer-avoid-prompt face minibuffer-prompt))
+ comint-prompt-read-only t              ;make shell prompt read only
  blink-cursor-interval 0.4
  bookmark-default-file (expand-file-name ".bookmarks.el" user-emacs-directory)
  buffers-menu-max-size 30
@@ -27,12 +27,13 @@
  truncate-lines nil
  truncate-partial-width-windows nil)
 
+(global-set-key (kbd "C-\"") 'bookmark-jump)
+
 (global-auto-revert-mode)
 (setq global-auto-revert-non-file-buffers t
       auto-revert-verbose nil)
 
 (transient-mark-mode t)
-
 
 
 ;;; Newline behaviour
@@ -62,7 +63,8 @@
 (require-package 'undo-tree)
 (global-undo-tree-mode)
 (diminish 'undo-tree-mode)
-
+(global-set-key (kbd "C-z") 'undo-tree-undo)
+(global-set-key (kbd "C-S-z") 'undo-tree-redo)
 
 (require-package 'highlight-symbol)
 (dolist (hook '(prog-mode-hook html-mode-hook css-mode-hook))
@@ -109,20 +111,45 @@
 (show-paren-mode 1)
 
 ;;----------------------------------------------------------------------------
-;; Expand region
-;;----------------------------------------------------------------------------
-(require-package 'expand-region)
-(global-set-key (kbd "C-=") 'er/expand-region)
-
-
-;;----------------------------------------------------------------------------
 ;; Don't disable case-change functions
 ;;----------------------------------------------------------------------------
 (put 'upcase-region 'disabled nil)
 (put 'downcase-region 'disabled nil)
 
+
+;; toggle case of single char
+(defun upcase-char (pos)
+  (when (> pos (point-min))
+    (save-excursion
+      (upcase-region pos (1+ pos)))
+    ))
 
-;;----------------------------------------------------------------------------
+(defun downcase-char (pos)
+  (when (> pos (point-min))
+    (save-excursion
+      (downcase-region pos (1+ pos)))
+    ))
+
+(defun toggle-current-char-case ()
+  (interactive)
+  (let ((current-position (point)))
+    (when (> current-position (point-min))
+      (when (not (eq last-command this-command))
+        (save-excursion
+          (goto-char current-position)
+          (cond
+           ((looking-at "[[:upper:]]") (put this-command 'state "u"))
+           ((looking-at "[[:lower:]]")(put this-command 'state "l"))
+           (t (put this-command 'state "l") ))
+          ))
+      (cond
+       ((string= "l" (get this-command 'state))
+        (put this-command 'state "u") (downcase-char current-position))
+       ((string= "u" (get this-command 'state))
+        (put this-command 'state "l") (upcase-char current-position))
+       ))))
+
+
 ;; Rectangle selections, and overwrite text when the selection is active
 ;;----------------------------------------------------------------------------
 (cua-selection-mode t)                  ; for rectangles, CUA is nice
@@ -172,7 +199,9 @@
     (kill-region (point) prev-pos)))
 
 (global-set-key (kbd "C-M-<backspace>") 'kill-back-to-indentation)
-
+(global-set-key [f2] 'whole-line-or-region-kill-region)
+(global-set-key [f3] 'whole-line-or-region-kill-ring-save)
+(global-set-key [f4] 'whole-line-or-region-yank)
 
 ;;----------------------------------------------------------------------------
 ;; Page break lines
@@ -189,8 +218,6 @@
 (require-package 'move-dup)
 (global-set-key [M-up] 'md/move-lines-up)
 (global-set-key [M-down] 'md/move-lines-down)
-(global-set-key [M-S-up] 'md/move-lines-up)
-(global-set-key [M-S-down] 'md/move-lines-down)
 
 (global-set-key (kbd "C-c p") 'md/duplicate-down)
 (global-set-key (kbd "C-c P") 'md/duplicate-up)
@@ -296,5 +323,49 @@ With arg N, insert N newlines."
 (guide-key-mode 1)
 (diminish 'guide-key-mode)
 
+
+(defun replace-pairs-region (p1 p2 pairs)
+  "Replace multiple PAIRS of find/replace strings in region P1 P2.
+
+PAIRS should be a sequence of pairs [[findStr1 replaceStr1] [findStr2 replaceStr2] …] It can be list or vector, for the elements or the entire argument.  
+
+The find strings are not case sensitive. If you want case sensitive, set `case-fold-search' to nil. Like this: (let ((case-fold-search nil)) (replace-pairs-region …))
+
+The replacement are literal and case sensitive.
+
+Once a subsring in the input string is replaced, that part is not changed again.  For example, if the input string is “abcd”, and the pairs are a → c and c → d, then, result is “cbdd”, not “dbdd”. If you simply want repeated replacements, use `replace-pairs-in-string-recursive'.
+
+Same as `replace-pairs-in-string' except does on a region.
+
+Note: the region's text or any string in pairs is assumed to NOT contain any character from Unicode Private Use Area A. That is, U+F0000 to U+FFFFD. And, there are no more than 65534 pairs."
+  (let (
+        (unicodePriveUseA #xf0000)
+        ξi (tempMapPoints '()))
+    ;; generate a list of Unicode chars for intermediate replacement. These chars are in  Private Use Area.
+    (setq ξi 0)
+    (while (< ξi (length pairs))
+      (setq tempMapPoints (cons (char-to-string (+ unicodePriveUseA ξi)) tempMapPoints ))
+      (setq ξi (1+ ξi))
+      )
+    (save-excursion
+      (save-restriction
+        (narrow-to-region p1 p2)
+
+        ;; replace each find string by corresponding item in tempMapPoints
+        (setq ξi 0)
+        (while (< ξi (length pairs))
+          (goto-char (point-min))
+          (while (search-forward (elt (elt pairs ξi) 0) nil t)
+            (replace-match (elt tempMapPoints ξi) t t) )
+          (setq ξi (1+ ξi))
+          )
+
+        ;; replace each tempMapPoints by corresponding replacement string
+        (setq ξi 0)
+        (while (< ξi (length pairs))
+          (goto-char (point-min))
+          (while (search-forward (elt tempMapPoints ξi) nil t)
+            (replace-match (elt (elt pairs ξi) 1) t t) )
+          (setq ξi (1+ ξi)) ) ) ) ) )
 
 (provide 'init-editing-utils)

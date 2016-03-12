@@ -55,6 +55,14 @@
     (delete-file (buffer-file-name))
     (kill-this-buffer)))
 
+;;----------------------------------------------------------------------------
+;; get string from the current file
+;;----------------------------------------------------------------------------
+(defun get-string-from-file (filePath)
+  "Return filePath's file content."
+  (with-temp-buffer
+    (insert-file-contents filePath)
+    (buffer-string)))
 
 ;;----------------------------------------------------------------------------
 ;; Rename the current file

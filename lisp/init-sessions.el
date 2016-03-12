@@ -63,7 +63,10 @@
                 (search-ring              . 20)
                 (shell-command-history    . 50)
                 tags-file-name
-                tags-table-list)))
+                tags-table-list))
+      desktop-modes-not-to-save (append '(dired-mode))
+      desktop-files-not-to-save "\\(^/[^/:]*:\\|(ftp)$\\|\\.pdf$\\)" ; pdf files is prefered to be recorded in session than in desktop
+      )
 
 (when (eval-when-compile (and (>= emacs-major-version 24)
                               (version< emacs-version "24.3.50")

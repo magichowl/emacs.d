@@ -9,6 +9,51 @@
 (define-key global-map (kbd "C-c l") 'org-store-link)
 (define-key global-map (kbd "C-c a") 'org-agenda)
 
+(require 'ox-beamer)
+(defun my-beamer-bold (contents backend info)
+  (when (eq backend 'beamer)
+    (replace-regexp-in-string "\\`\\\\[A-Za-z0-9]+" "\\\\textbf" contents)))
+(add-to-list 'org-export-filter-bold-functions 'my-beamer-bold)
+
+(defun my-beamer-warning (contents backend info)
+  (when (eq backend 'beamer)
+    (replace-regexp-in-string "\\`\\\\[A-Za-z0-9]+" "\\\\alert" contents)))
+
+(add-to-list 'org-export-filter-verbatim-functions 'my-beamer-warning)
+
+;; to enable ~'xxx~ *"xx* =,xx= to be treated as emphasised expressions
+(setcar (nthcdr 2 org-emphasis-regexp-components) " \t\n")
+(custom-set-variables `(org-emphasis-alist ',org-emphasis-alist))
+
+;; export snippet translations
+(add-to-list 'org-export-snippet-translation-alist
+             '("b" . "beamer"))
+
+;; auto enable preview for math equations
+(setq org-startup-with-latex-preview 'nil)
+;; auto enable image preview
+;; (setq org-startup-with-inline-images t)
+
+(setq org-latex-default-packages-alist
+      '(("log-declarations=false" "xparse" t) ;; warnings are erased
+        ("T1" "fontenc" t)
+        ;; ("quiet" "fontspec" t) ;; see http://tex.stackexchange.com/questions/46683/xelatex-warning-redefining-document-command-oldstylenums-with-arg-spec-m
+        ("" "float" nil)
+        ("" "wrapfig" nil)
+        ("" "rotating" nil)
+        ("normalem" "ulem" t)
+        ("" "graphicx" t)
+        ("" "amsmath" t)
+        ("" "amssymb" t)
+        ;; ("colorlinks,linkcolor=blue,anchorcolor=blue,citecolor=blue" "hyperref" nil)
+        ("" "hyperref" nil)
+        "\\tolerance=1000"))
+;; (require 'ox-bibtex)
+;; export org-mode in Chinese into PDF
+;; package xeCJK should be in org file
+;; (setq org-latex-pdf-process '("latexmk -xelatex -f %f"))
+(setq org-latex-pdf-process '("autolatex"))
+
 ;; Various preferences
 (setq org-log-done t
       org-completion-use-ido t
@@ -19,6 +64,7 @@
       org-fast-tag-selection-single-key 'expert
       org-html-validation-link nil
       org-export-kill-product-buffer-when-displayed t
+      org-odt-preferred-output-format "docx"
       org-tags-column 80)
 
 
@@ -131,7 +177,8 @@ typical word processor."
 ;;; To-do settings
 
 (setq org-todo-keywords
-      (quote ((sequence "TODO(t)" "NEXT(n)" "|" "DONE(d!/!)")
+      (quote ((sequence "☐" "☑" "☒")
+              (sequence "TODO(t)" "NEXT(n)" "|" "DONE(d!/!)")
               (sequence "PROJECT(p)" "|" "DONE(d!/!)" "CANCELLED(c@/!)")
               (sequence "WAITING(w@/!)" "HOLD(h)" "|" "CANCELLED(c@/!)"))))
 
@@ -309,6 +356,62 @@ typical word processor."
 ;;         '(("I" "Import diary from iCal" agenda ""
 ;;            ((org-agenda-mode-hook #'org-mac-iCal)))))
 
+(require-package 'cal-china-x)
+(require 'cal-china-x)
+(setq mark-holidays-in-calendar t)
+(setq cal-china-x-important-holidays cal-china-x-chinese-holidays)
+(setq holiday-pss-holidays
+      (append cal-china-x-chinese-holidays
+              '(;;公历节日
+                ;;(holiday-float 6 0 3 "父亲节")
+                (holiday-fixed 10 2 "结婚纪念日")
+                (holiday-fixed 8 14 "瑶桐生日")
+                ;; 农历节日
+                (holiday-lunar 1 1 "春节" 0)
+                (holiday-lunar 7 7 "结婚纪念日" "七夕")
+                (holiday-lunar 11 6 "妈生日" 0)
+                (holiday-lunar 11 14 "李莎生日" 0)
+                (holiday-lunar 12 16 "爸生日" 0)
+                )
+              )
+      )
+(setq calendar-holidays holiday-pss-holidays)
+
+(add-hook 'org-finalize-agenda-hook
+          (lambda ()
+            (save-excursion
+              (color-org-header "Personal:"  "green")
+              (color-org-header "Birthdays:" "gold")
+              (color-org-header "Work:"      "orange")
+              (color-org-header "Weather:"      "gray")
+              (color-org-header "Off-site:"  "SkyBlue4"))))
+(defun color-org-header (tag col)
+  ""
+  (interactive)
+  (goto-char (point-min))
+  (while (re-search-forward tag nil t)
+    (add-text-properties (match-beginning 0) (point-at-eol)
+                         `(face (:foreground ,col)))))
+
+;; (setq appt-display-mode-line 'nil
+;;       appt-message-warning-time 15 ;; warn 15 min in advance
+;;       appt-display-format 'windows
+;;       ;; todochiku-display-appts-in-window-too 'nil
+;;       )
+
+(org-agenda-to-appt)
+;; When use 'r' (rebuild agenda) reload appt
+(add-hook 'org-agenda-mode-hook
+          (lambda ()
+            (setq appt-time-msg-list nil)
+            (org-agenda-to-appt)))
+
+(appt-activate t)             ;; active appt (appointment notification)
+(display-time)
+
+;; update appt each time agenda opened
+(add-hook 'org-finalize-agenda-hook 'org-agenda-to-appt)
+
 ;;   (add-hook 'org-agenda-cleanup-fancy-diary-hook
 ;;             (lambda ()
 ;;               (goto-char (point-min))
@@ -324,7 +427,7 @@ typical word processor."
 
 
 (after-load 'org
-  (define-key org-mode-map (kbd "C-M-<up>") 'org-up-element)
+  (define-key org-mode-map (kbd "C-c C-<up>") 'org-up-element)
   (when *is-a-mac*
     (define-key org-mode-map (kbd "M-h") nil)
     (define-key org-mode-map (kbd "C-c g") 'org-mac-grab-link)))
@@ -349,5 +452,45 @@ typical word processor."
      (sql . nil)
      (sqlite . t))))
 
+;; adds support for only environment and associates to the letter O
+(add-to-list 'org-beamer-environments-extra
+             '("onlyenv" "O" "\\begin{onlyenv}%a" "\\end{onlyenv}"))
+
+;; Conditionally eval org-babel code without confirm for security reason
+;; see http://orgmode.org/manual/Code-evaluation-security.html#Code-evaluation-security
+(defun my-org-confirm-babel-evaluate (lang body)
+  (not (member lang '("latex" "ditaa" "dot" "R"))))  ; don't ask for ditaa
+(setq org-confirm-babel-evaluate 'my-org-confirm-babel-evaluate)
+
+                                        ; Make babel results blocks lowercase
+(setq org-babel-results-keyword "results")
+
+(defun bh/display-inline-images ()
+  (condition-case nil
+      (org-display-inline-images)
+    (error nil)))
+(add-hook 'org-babel-after-execute-hook 'bh/display-inline-images 'append)
+
+(defun org-mode-article-modes ()
+  (reftex-mode t)
+  (and (buffer-file-name)
+       (file-exists-p (buffer-file-name))
+       (reftex-parse-all)))
+
+(mapc (lambda (mode)
+        (add-hook 'org-mode-hook mode))
+      (list 'turn-on-org-cdlatex
+            '(lambda () (local-set-key (kbd "s-e") 'org-emphasize)
+               (local-set-key (kbd "C-c [") 'org-reftex-citation)
+               (local-set-key (kbd "C-c e") 'LaTeX-environment)
+               )
+            )
+      )
+
+(add-hook 'org-mode-hook
+          (lambda ()
+            (if (member "REFTEX" org-todo-keywords-1)
+                (org-mode-article-modes)))
+          )
 
 (provide 'init-org)

@@ -133,9 +133,6 @@
 ;; Enable desired features for all lisp modes
 ;; ----------------------------------------------------------------------------
 (require-package 'rainbow-delimiters)
-(require-package 'redshank)
-(after-load 'redshank
-  (diminish 'redshank-mode))
 
 (defun sanityinc/enable-check-parens-on-save ()
   "Run `check-parens' when the current buffer is saved."
@@ -165,7 +162,11 @@
 
 (defun sanityinc/lisp-setup ()
   "Enable features useful in any Lisp mode."
-  (run-hooks 'sanityinc/lispy-modes-hook))
+  (rainbow-delimiters-mode t)
+  (when (fboundp 'aggressive-indent-mode)
+    (aggressive-indent-mode))
+  (turn-on-eldoc-mode)
+  (add-hook 'after-save-hook #'check-parens nil t))
 
 (defun sanityinc/emacs-lisp-setup ()
   "Enable features useful when working with elisp."

@@ -13,6 +13,8 @@
 
 (defconst *spell-check-support-enabled* nil) ;; Enable with t if you prefer
 (defconst *is-a-mac* (eq system-type 'darwin))
+(defconst *linux* (or (eq system-type 'gnu/linux) (eq system-type 'linux)))
+(defconst *windows* (or (eq system-type 'cygwin) (eq system-type 'windows-nt)))
 
 ;;----------------------------------------------------------------------------
 ;; Temporarily reduce garbage collection during startup
@@ -48,6 +50,10 @@
 (require-package 'diminish)
 (require-package 'scratch)
 (require-package 'mwe-log-commands)
+(require-package 'pdf-tools)
+(pdf-tools-install)
+(require-package 'tabbar)
+(tabbar-mode t)
 
 (require 'init-frame-hooks)
 (require 'init-xterm)
@@ -60,6 +66,7 @@
 (require 'init-uniquify)
 (require 'init-ibuffer)
 (require 'init-flycheck)
+(require 'init-growl)
 
 (require 'init-recentf)
 (require 'init-ido)
@@ -70,9 +77,11 @@
 (require 'init-fonts)
 (require 'init-mmm)
 
+(require 'init-smartparens)
 (require 'init-editing-utils)
 (require 'init-whitespace)
 (require 'init-fci)
+(require 'init-yasnippet)
 
 (require 'init-vc)
 (require 'init-darcs)
@@ -88,6 +97,7 @@
 (require 'init-javascript)
 (require 'init-php)
 (require 'init-org)
+(require 'init-latex)
 (require 'init-nxml)
 (require 'init-html)
 (require 'init-css)
@@ -99,7 +109,6 @@
 (require 'init-rails)
 (require 'init-sql)
 
-(require 'init-paredit)
 (require 'init-lisp)
 (require 'init-slime)
 (unless (version<= emacs-version "24.2")
@@ -107,6 +116,9 @@
   (require 'init-clojure-cider))
 (require 'init-common-lisp)
 
+(require 'init-bbdb)
+(require 'gnus-mu4e)
+(require 'init-ergoemacs)
 (when *spell-check-support-enabled*
   (require 'init-spelling))
 
