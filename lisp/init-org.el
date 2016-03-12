@@ -64,6 +64,7 @@
       org-fast-tag-selection-single-key 'expert
       org-html-validation-link nil
       org-export-kill-product-buffer-when-displayed t
+      org-odt-preferred-output-format "docx"
       org-tags-column 80)
 
 
