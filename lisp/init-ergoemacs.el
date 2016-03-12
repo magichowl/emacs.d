@@ -53,6 +53,7 @@
 (global-set-key (kbd "M-j") 'ergoemacs-backward-open-bracket)
 (global-set-key (kbd "M-l") 'ergoemacs-forward-close-bracket)
 (global-set-key (kbd "M-g") 'kill-line)
-(global-set-key (kbd "M-x") 'zap-up-to-char)
+(global-set-key (kbd "M-<") 'zap-up-to-char)
+(global-set-key (kbd "M->") 'zap-to-char)
 
 (provide 'init-ergoemacs)
