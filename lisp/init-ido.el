@@ -1,5 +1,7 @@
 ;; Use C-f during file selection to switch to regular find-file
 (ido-mode t)
+;; use c-j to accept what u typed, c-f drop completions,
+;; c-z to disable its auto-completion, and c-s or c-r to cycle through matches
 (ido-everywhere t)
 (setq ido-enable-flex-matching t)
 (setq ido-use-filename-at-point nil)
