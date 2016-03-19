@@ -11,6 +11,10 @@
 
 (add-hook 'after-init-hook 'sanityinc/maybe-use-default-font-for-symbols)
 
+;; specify font for all unicode characters, such as 😁
+(when (member "Symbola" (font-family-list))
+  (set-fontset-font t 'unicode "Symbola" nil 'prepend))
+
 
 ;;; Changing font sizes
 
