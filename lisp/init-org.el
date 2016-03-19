@@ -29,6 +29,7 @@
 (add-to-list 'org-export-snippet-translation-alist
              '("b" . "beamer"))
 
+(setq org-highlight-latex-and-related '(latex script entities))
 ;; auto enable preview for math equations
 (setq org-startup-with-latex-preview 'nil)
 ;; auto enable image preview
