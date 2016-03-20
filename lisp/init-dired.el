@@ -1,11 +1,17 @@
 (require-package 'dired+)
 (require-package 'dired-sort)
 (setq-default diredp-hide-details-initially-flag t
-              dired-dwim-target t)
+              dired-dwim-target t
+              dired-listing-switches "--si --time-style long-iso -Alr")
 
 ;; add packing and unpacking for dired
+;; (github-clone "https://github.com/magichowl/emacs.d.git" "~/.emacs.d/package/dired-pack")
 (load-file "~/.emacs.d/package/dired-pack/dired-pack.el")
 (require 'dired-pack)
+
+;; Prefer g-prefixed coreutils version of standard utilities when available
+(let ((gls (executable-find "gls")))
+  (when gls (setq insert-directory-program gls)))
 
 ;; run asynchronously for copying, renaming and symlinking
 (require-package 'async)
@@ -15,8 +21,6 @@
 (after-load 'dired
   (require 'dired+)
   (require 'dired-sort)
-  (when (fboundp 'global-dired-hide-details-mode)
-    (global-dired-hide-details-mode -1))
   (setq dired-recursive-deletes 'top)
   (define-key dired-mode-map [mouse-2] 'dired-find-file)
   ;; no corresponding functions
