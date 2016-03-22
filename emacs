@@ -8,8 +8,8 @@
 #
 emacs_process_id=$(pidof emacs24)
 if [ -z $emacs_process_id ]; then
-    /usr/bin/emacs24 $* &
+    /usr/bin/emacs24 "$*" &
 else
-    /usr/bin/gnuclient $* &
+    /usr/bin/gnuclient "$*" &
 fi
 
