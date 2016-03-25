@@ -105,7 +105,6 @@ typical word processor."
   (if prose-mode
       (progn
         (setq truncate-lines nil)
-        (setq word-wrap t)
         (setq cursor-type 'bar)
         (when (eq major-mode 'org)
           (kill-local-variable 'buffer-face-mode-face))
@@ -115,9 +114,8 @@ typical word processor."
         (set (make-local-variable 'show-trailing-whitespace) nil)
         (flyspell-mode 1)
         (when (fboundp 'visual-line-mode)
-          (visual-line-mode 1)))
+          (visual-line-mode)))
     (kill-local-variable 'truncate-lines)
-    (kill-local-variable 'word-wrap)
     (kill-local-variable 'cursor-type)
     (kill-local-variable 'show-trailing-whitespace)
     (buffer-face-mode -1)
@@ -491,7 +489,12 @@ typical word processor."
 (add-hook 'org-mode-hook
           (lambda ()
             (if (member "REFTEX" org-todo-keywords-1)
-                (org-mode-article-modes)))
+                (org-mode-article-modes))
+            (set-face-attribute 'org-level-1 nil :height 1.6 :bold t)
+            (set-face-attribute 'org-level-2 nil :height 1.4 :bold t)
+            (set-face-attribute 'org-level-3 nil :height 1.2 :bold t)
+            (prose-mode)
+            )
           )
 
 (provide 'init-org)
