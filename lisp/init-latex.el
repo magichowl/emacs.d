@@ -33,8 +33,8 @@
 (setq TeX-view-program-list
       '(("Okular"
          ("okular --unique %u"))
-        ("Evince"
-         ("evince %o"))
+        ;; ("Evince"
+        ;;  ("evince %o"))
         ("Emacs"
          ("emacs %o"))
         )) ;; <<-- This is part of the quick-fix.
@@ -46,7 +46,7 @@
 (eval-after-load 'tex
   '(progn
      (assq-delete-all 'output-pdf TeX-view-program-selection)
-     (add-to-list 'TeX-view-program-selection '(output-pdf "Evince"))
+     (add-to-list 'TeX-view-program-selection '(output-pdf "Emacs"))
      ;; (add-to-list 'TeX-command-list
      ;;              '("Arara" "arara %s" TeX-run-TeX nil t :help "Run Arara."))
      (add-to-list 'TeX-command-list
