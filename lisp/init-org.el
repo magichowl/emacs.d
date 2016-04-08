@@ -45,6 +45,7 @@
         ("normalem" "ulem" t)
         ("" "graphicx" t)
         ("" "amsmath" t)
+        ("" "amsthm" t)
         ("" "amssymb" t)
         ;; ("colorlinks,linkcolor=blue,anchorcolor=blue,citecolor=blue" "hyperref" nil)
         ("" "hyperref" nil)
@@ -146,7 +147,7 @@ typical word processor."
 
 (setq org-refile-use-cache nil)
 
-; Targets include this file and any file contributing to the agenda - up to 5 levels deep
+;; Targets include this file and any file contributing to the agenda - up to 5 levels deep
 (setq org-refile-targets '((nil :maxlevel . 5) (org-agenda-files :maxlevel . 5)))
 
 (after-load 'org-agenda
@@ -479,9 +480,11 @@ typical word processor."
 (mapc (lambda (mode)
         (add-hook 'org-mode-hook mode))
       (list 'turn-on-org-cdlatex
-            '(lambda () (local-set-key (kbd "s-e") 'org-emphasize)
+            '(lambda ()
+               (local-set-key (kbd "M-E") 'org-emphasize)
                (local-set-key (kbd "C-c [") 'org-reftex-citation)
                (local-set-key (kbd "C-c e") 'LaTeX-environment)
+               (local-set-key (kbd "C-c C-c") 'orgtbl-ctrl-c-ctrl-c)
                )
             )
       )
