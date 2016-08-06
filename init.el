@@ -50,8 +50,10 @@
 (require-package 'diminish)
 (require-package 'scratch)
 (require-package 'mwe-log-commands)
-(require-package 'pdf-tools)
-(pdf-tools-install)
+(when *linux*
+  (require-package 'pdf-tools)
+  (pdf-tools-install)
+  )
 (require-package 'tabbar)
 (tabbar-mode t)
 
@@ -66,8 +68,9 @@
 (require 'init-uniquify)
 (require 'init-ibuffer)
 (require 'init-flycheck)
-(require 'init-growl)
-
+(when *linux*
+  (require 'init-growl)
+  )
 (require 'init-recentf)
 (require 'init-ido)
 (require 'init-hippie-expand)
