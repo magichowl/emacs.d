@@ -12,6 +12,7 @@
 (add-hook 'after-init-hook 'sanityinc/maybe-use-default-font-for-symbols)
 
 ;; specify font for all unicode characters, such as 😁
+;; make sure Symbola font is installed in the system
 (when (member "Symbola" (font-family-list))
   (set-fontset-font t 'unicode "Symbola" nil 'prepend))
 
