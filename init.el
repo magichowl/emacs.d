@@ -120,7 +120,8 @@
 (require 'init-common-lisp)
 
 (require 'init-bbdb)
-(require 'gnus-mu4e)
+(when *linux*
+  (require 'gnus-mu4e))
 (require 'init-ergoemacs)
 (when *spell-check-support-enabled*
   (require 'init-spelling))

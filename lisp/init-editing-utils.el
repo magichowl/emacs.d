@@ -373,15 +373,16 @@ Note: the region's text or any string in pairs is assumed to NOT contain any cha
 ;;
 ;; see http://www.debian-administration.org/article/257/
 ;; (setq load-path (cons (expand-file-name "~/.emacs.d/site-lisp/gnuserv") load-path))
-(setq gnuserv-path "/usr/share/emacs/site-lisp/gnuserv")
-(if (and *linux* (file-exists-p gnuserv-path))
-  (progn (setq load-path (cons gnuserv-path load-path))
-         (load "gnuserv-compat")
-         (load-library "gnuserv")
-         (setq gnuserv-kill-quietly t)
-         ;; When loading files reuse existing frames.
-         (setq gnuserv-frame (car (frame-list)))
-         (gnuserv-start))
-  (message "Warning: can't configure GNUServe!...fail"))
-
+(when *linux*
+  (setq gnuserv-path "/usr/share/emacs/site-lisp/gnuserv")
+  (if (file-exists-p gnuserv-path)
+      (progn (setq load-path (cons gnuserv-path load-path))
+             (load "gnuserv-compat")
+             (load-library "gnuserv")
+             (setq gnuserv-kill-quietly t)
+             ;; When loading files reuse existing frames.
+             (setq gnuserv-frame (car (frame-list)))
+             (gnuserv-start))
+    (message "Warning: can't configure GNUServe!...fail"))
+  )
 (provide 'init-editing-utils)
