@@ -33,6 +33,8 @@
 (setq TeX-view-program-list
       '(("Okular"
          ("okular --unique %u"))
+        ("Sumatra PDF" ("\"c:/Program files/SumatraPDF/SumatraPDF.exe\" -reuse-instance"
+                        (mode-io-correlate " -forward-search %b %n ") " %o"))
         ;; ("Evince"
         ;;  ("evince %o"))
         ("Emacs"
@@ -46,7 +48,8 @@
 (eval-after-load 'tex
   '(progn
      (assq-delete-all 'output-pdf TeX-view-program-selection)
-     (add-to-list 'TeX-view-program-selection '(output-pdf "Emacs"))
+     (add-to-list 'TeX-view-program-selection '(output-pdf "Sumatra PDF"))
+     ;; (add-to-list 'TeX-view-program-selection '(output-pdf "Emacs"))
      ;; (add-to-list 'TeX-command-list
      ;;              '("Arara" "arara %s" TeX-run-TeX nil t :help "Run Arara."))
      (add-to-list 'TeX-command-list
