@@ -15,7 +15,9 @@
 ;; make sure Symbola font is installed in the system
 (when (member "Symbola" (font-family-list))
   (set-fontset-font t 'unicode "Symbola" nil 'prepend))
-
+;; solve mess chinese characters
+(when *windows*
+  (set-fontset-font "fontset-default"'gb18030' ("Microsoft YaHei" . "unicode-bmp")))
 
 ;;; Changing font sizes
 
