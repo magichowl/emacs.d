@@ -1,5 +1,7 @@
 (require-package 'unfill)
-
+(require-package 'vdiff)
+(require 'vdiff)
+(define-key vdiff-mode-map (kbd "C-c") vdiff-mode-prefix-map)
 (when (eval-when-compile (version< "24.4" emacs-version))
   (electric-indent-mode 1))
 
